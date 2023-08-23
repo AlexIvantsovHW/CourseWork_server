@@ -29,10 +29,10 @@ app.get('/users',(req,res)=>{
 app.post('/registration',upload.array(),(req,res)=>{  
     const name=req.body.name;
     const email=req.body.email;
-    const pass=req.body.password;
+    const password=req.body.pass;
 
     let qUpdate="INSERT INTO `Users`(`name`,`email`,`password`) VALUES(?,?,?)"
-    conn.query(qUpdate,[name,email,pass],(err)=>{console.log(err);})
+    conn.query(qUpdate,[name,email,password],(err)=>{console.log(err);})
     console.log('done')
 })
 
