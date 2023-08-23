@@ -33,17 +33,7 @@ app.post('/registration',upload.array(),(req,res)=>{
 
     let qUpdate="INSERT INTO `Users`(`name`,`email`,`password`) VALUES(?,?,?)"
     conn.query(qUpdate,[name,email,pass],(err)=>{console.log(err);})
+    console.log('done')
 })
 
-
-/* app.post('/create',upload.array(),(req,res)=>{  
-    const name=req.body.name;
-    const text=req.body.text;
-    const tag=req.body.tag;
-    const time=req.body.time;
-    let qInsert="INSERT INTO `chat`(`name`, `text`, `tag`,`time`) VALUES (?,?,?,?)"
-    conn.query(qInsert,[name,text,tag,time],(err)=>{console.log(err);})
-})
- */
-//
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
