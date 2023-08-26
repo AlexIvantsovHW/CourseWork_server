@@ -37,14 +37,15 @@ router.post('/login',upload.array(),(req,res)=>{
     let sql="SELECT * FROM  Users WHERE `name`=?";
     conn.query(sql,[name], function (err, result) {
         if (err) throw err;
-        if(result[0].name==='Alina'){
+        if(result[0].name===name){
             if(result[0].password===password){
+                console.log(result[0].password===password);
                 res.send(true);
-            }else{res.send('Password is wrong!')}
+            }else{
+                res.send('Password is wrong!')}
         }else
-            {res.send('User undefined')}});
-    ;
-
+            {   console.log(result[0].password===password);
+                res.send('User undefined')}});
 })
 
 module.exports=router;
