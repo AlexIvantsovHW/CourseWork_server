@@ -4,6 +4,19 @@ const cors = require('cors')
 const port=process.env.PORT||3001
 const bodyParser=require('body-parser')
 
+//
+var multer = require("multer");
+var upload = multer({ dest: "./upload/" });
+const mysql=require('mysql')
+
+const conn=mysql.createConnection({
+    host:'bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com',
+    user:'ueedenphzx2yvgfe',
+    database:'bblqpq3zqeki4vqkexwc',
+    password:'Hea5c7Ksi0Ls7h3kyZzp'
+})
+//
+
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
 app.use((req, res, next) => {
@@ -15,5 +28,14 @@ app.use((req, res, next) => {
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
 
+
+/*   const id=7
+  conn.connect(function(err) {
+    if (err) throw err;
+    conn.query("SELECT * FROM Recommendation WHERE `id_user`=7", function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+    });
+  }); */
 
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
