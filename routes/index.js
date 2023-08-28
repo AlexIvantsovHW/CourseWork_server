@@ -58,20 +58,46 @@ router.post('/recommendation',upload.array(),(req,res)=>{
     })
   })
 
-
+  // Profile page
   router.post('/addRecommendation',upload.array(),(req,res)=>{   
     const id_user=req.body.id_user;
-    const recommendation=req.body.recommendation;
-    const group_name=req.body.group_name;
-    const recommend_name=req.body.recommend_name;
-    const recommend_category=req.body.recommend_category;
-        
-    let sql="INSERT INTO Recommendation WHERE (`id_user`,`recommendation`,`group_name`,`recommend_name`,`recommend_category`) VALUES (?,?,?,?,?)";
-    conn.query(sql,[id_user,recommendation,group_name,recommend_name,recommend_category],(err,result)=>{
+    let image;
+    if(req.body.image===undefined?image=null:image=req.body.image);
+    const title=req.body.title;
+    const name=req.body.name;
+    const group=req.body.group;
+    const category=req.body.category;
+    const text=req.body.text;
+    const tag=req.body.tag;
+    const date_upload=req.body.date_upload;
+
+     console.log(req.body)   
+    let sql="INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`score`,`id_comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    conn.query(sql,[null,id_user,image,title,name,group,category,text,tag,0,0,date_upload],(err,result)=>{
+        if(err){console.log(err)}
+      
+    let requestSQL="SELECT * FROM Recommendation WHERE `id_user`=?";
+    conn.query(requestSQL,[id_user],(err,result)=>{
         if(err){console.log(err);
         }else{
             console.log(result)
             res.send(result)}
     })
+    })
   }) 
+
+
+  router.post('/updateRecommendation',upload.array(),(req,res)=>{  
+    id_user=req.body.id_user;
+    let qUpdate="UPDATE `Recommendation` SET `recommendation`=? WHERE `id_user` IN (?)"
+    conn.query(qUpdate,['Active',req.body],(err)=>{console.log(err);})
+    let sql="SELECT * FROM Recommendation";
+    conn.query(sql,(err,result)=>{
+        if(err){console.log(err);
+        }else{res.send(result)}
+    })
+})
+
+
+
 module.exports=router;
