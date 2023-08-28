@@ -57,8 +57,7 @@ router.post('/recommendation',upload.array(),(req,res)=>{
             res.send(result)}
     })
   })
-  let qUpdate="INSERT INTO `dataTable`(`name`,`email`,`tReg`,`status`,`password`) VALUES(?,?,?,?,?)"
-  conn.query(qUpdate,[name,email,tReg,'Active',pass],(err)=>{console.log(err);})
+
 
   router.post('/addRecommendation',upload.array(),(req,res)=>{   
     const id_user=req.body.id_user;
