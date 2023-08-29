@@ -27,25 +27,6 @@ app.use((req, res, next) => {
   })
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
-/* let sql="INSERT INTO Recommendation WHERE (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`score`,`id_comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-    conn.query(sql,[null,id_user,image,title,name,group,category,text,tag,0,0,date_upload] */
 
-/*     let image=null;
-    const title='NFS';
-    const id_user=1;
-    const name='needforspeed';
-    const group='action';
-    const category='film';
-    const text='new comment';
-    const tag='speed';
-    const date_upload='2023-08-28 15:58:56';
-
-  conn.connect(function(err) {
-    if (err) throw err;
-    conn.query("INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`score`,`id_comment`,`date_upload`) VALUES (null,'1','image','title','name','group','category','text','tag',0,0,'2023-08-28 15:58:56')", function (err, result, fields) {
-      if (err) throw err;
-      console.log(result);
-    });
-  }); */
 
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
