@@ -28,5 +28,13 @@ app.use((req, res, next) => {
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
 
+/* 
+conn.connect(function(err) {
+  if (err) throw err;
+  conn.query("SELECT id_r, COUNT(id_r) FROM score_user GROUP BY id_r", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+  });
+}); */
 
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})

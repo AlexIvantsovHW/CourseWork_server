@@ -87,17 +87,21 @@ router.get("/db", (req, res) => {
 
 router.post("/sort", upload.array(), (req, res) => {
   const sort = req.body.sort;
-  const field = req.body.field;
+  const field=req.body.field;
   let sql;
-  if (sort === "DESC" && field === "date_upload") {
-    sql = "SELECT * FROM Recommendation ORDER BY date_upload DESC";
-  } else if (sort === "ASC" && field === "date_upload") {
-    sql = "SELECT * FROM Recommendation ORDER BY date_upload ASC";
-  } else if (sort === "DESC" && field === "score") {
-    sql = "SELECT * FROM Recommendation ORDER BY score ASC";
-  } else if (sort === "ASC" && field === "score") {
-    sql = "SELECT * FROM Recommendation ORDER BY score ASC";
-  }
+  if(sort==='DESC'&&field==='date_upload'){
+     sql = "SELECT * FROM Recommendation ORDER BY date_upload DESC";}
+  else if(sort==='ASC'&&field==='date_upload'){
+     sql = "SELECT * FROM Recommendation ORDER BY date_upload ASC";}
+  else if(sort==='DESC'&&field==='score'){
+    sql = "SELECT * FROM Recommendation ORDER BY score ASC";}
+  else if(sort==='ASC'&&field==='score'){
+    sql = "SELECT * FROM Recommendation ORDER BY score ASC";}      
+  conn.query(sql,(err, result) => {if (err) {console.log(err);} else {res.send(result);}});
+});
+// Main page
+router.get("/score", (req, res) => {
+  let sql = "SELECT id_r, COUNT(id_r) FROM score_user GROUP BY id_r";
   conn.query(sql, (err, result) => {
     if (err) {
       console.log(err);
@@ -158,7 +162,7 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
 });
 
 router.post("/update", upload.array(), (req, res) => {
-  const id_r = req.body.id_r;
+   const id_r = req.body.id_r;
   let image;
   if (req.body.image === undefined ? (image = null) : (image = req.body.image));
   const title = req.body.title;
@@ -170,13 +174,9 @@ router.post("/update", upload.array(), (req, res) => {
   const date_upload = req.body.date_upload;
   let qUpdate =
     "UPDATE `Recommendation` SET `image`=?,`title`=?,`name`=?,`group`=?,`category`=?,`text`=?,`tag`=?,`date_upload`=? WHERE `id_r` IN (?)";
-  conn.query(
-    qUpdate,
-    [image, title, name, group, category, text, tag, date_upload, id_r],
-    (err) => {
-      console.log(err);
-    }
-  );
+  conn.query(qUpdate, [image, title,name,group,category,text,tag,date_upload,id_r], (err) => {
+    console.log(err);
+  });
   let sql = "SELECT * FROM Recommendation";
   conn.query(sql, (err, result) => {
     if (err) {
