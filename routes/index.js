@@ -4,11 +4,19 @@ var multer = require("multer");
 var upload = multer({ dest: "./upload/" });
 const mysql = require("mysql");
 
-const conn = mysql.createConnection({
+/* const conn = mysql.createConnection({
   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com",
   user: "ueedenphzx2yvgfe",
   database: "bblqpq3zqeki4vqkexwc",
   password: "Hea5c7Ksi0Ls7h3kyZzp",
+});
+
+ */
+const conn = mysql.createConnection({
+/*   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com", */
+  user: "root",
+  database: "bblqpq3zqeki4vqkexwc",
+  password: "",
 });
 
 router.get("/", (req, res) => {
@@ -101,7 +109,7 @@ router.post("/sort", upload.array(), (req, res) => {
 });
 // Main page
 router.get("/score", (req, res) => {
-  let sql = "SELECT id_r, COUNT(id_r) FROM score_user GROUP BY id_r";
+  let sql = "SELECT id_r, COUNT(id_r) AS Amount FROM score_user GROUP BY id_r";
   conn.query(sql, (err, result) => {
     if (err) {
       console.log(err);
@@ -110,9 +118,28 @@ router.get("/score", (req, res) => {
     }
   });
 });
+router.post("/like", upload.array(), (req, res) => {
+  id_r=req.body.id_r;
+  id_user=req.body.id_user;
+  like=+req.body.like;
+  let sql;
+  if(like===1){
+    sql="INSERT INTO score_user (`id_r`,`id_user`) VALUES (?,?)"
+  }else if(like===0){
+    sql="DELETE FROM `score_user` WHERE id_r IN (?) AND id_user IN (?)"
+  }
+  conn.query(sql,[id_r,id_user], (err, result) => {
+    if (err) {
+      console.log(err);
+    } /* else {
+      res.send(result);
+    } */
+  });
+});
 
 // Profile page
 router.post("/addRecommendation", upload.array(), (req, res) => {
+  
   const id_user = req.body.id_user;
   let image;
   if (req.body.image === undefined ? (image = null) : (image = req.body.image));
@@ -123,10 +150,9 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
   const text = req.body.text;
   const tag = req.body.tag;
   const date_upload = req.body.date_upload;
-
-  console.log(req.body);
+  console.log(image)
   let sql =
-    "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`score`,`id_comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`Amount`,`id_comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
   conn.query(
     sql,
     [
