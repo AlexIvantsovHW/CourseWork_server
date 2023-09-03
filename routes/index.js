@@ -118,6 +118,18 @@ router.get("/score", (req, res) => {
     }
   });
 });
+
+router.get("/score_user", (req, res) => {
+  let sql = "SELECT id_user, COUNT(id_user) AS userLikes FROM score_user GROUP BY id_user";
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 router.post("/like", upload.array(), (req, res) => {
   id_r=req.body.id_r;
   id_user=req.body.id_user;
@@ -126,14 +138,12 @@ router.post("/like", upload.array(), (req, res) => {
   if(like===1){
     sql="INSERT INTO score_user (`id_r`,`id_user`) VALUES (?,?)"
   }else if(like===0){
-    sql="DELETE FROM `score_user` WHERE id_r IN (?) AND id_user IN (?)"
+    sql="DELETE FROM `score_user` WHERE `id_r`=? AND `id_user`=?"
   }
   conn.query(sql,[id_r,id_user], (err, result) => {
     if (err) {
       console.log(err);
-    } /* else {
-      res.send(result);
-    } */
+    } 
   });
 });
 

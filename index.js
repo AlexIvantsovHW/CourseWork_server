@@ -4,7 +4,7 @@ const cors = require('cors')
 const port=process.env.PORT||3001
 const bodyParser=require('body-parser')
 
-//
+/* //
 var multer = require("multer");
 var upload = multer({ dest: "./upload/" });
 const mysql=require('mysql')
@@ -16,7 +16,7 @@ const conn=mysql.createConnection({
     password:'Hea5c7Ksi0Ls7h3kyZzp'
 })
 //
-
+ */
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
 app.use((req, res, next) => {
