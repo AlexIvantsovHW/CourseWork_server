@@ -117,6 +117,8 @@ router.get("/score", (req, res) => {
   });
 });
 
+
+
 router.get("/score_user", (req, res) => {
   let sql = "SELECT DISTINCT id_user, id_r AS userLikes FROM score_user";
   conn.query(sql, (err, result) => {
@@ -177,6 +179,37 @@ router.post("/like", upload.array(), (req, res) => {
     } else{
     let requestSQL = "SELECT * FROM score_user WHERE `id_user`=?";
     conn.query(requestSQL, [id_user], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });}
+
+  });
+});
+
+router.post("/rate", upload.array(), (req, res) => {
+  id_r=req.body.id_r;
+  id_user=req.body.id_user;
+  rate=+req.body.rate;
+  action=+req.body.action;
+  console.log('id_r',id_r)
+  console.log('id_user',id_user)
+  console.log('rate',rate)
+  let sql;
+  if(action===1){
+    sql="INSERT INTO rating_user (`id_r`,`id_user`,`rate`) VALUES (?,?,?)"
+  }else if(action===0){
+    sql="DELETE FROM rating_user WHERE `id_r`=? AND `id_user`=? AND `rate`=?"
+  }
+  conn.query(sql,[id_r,id_user,rate], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else{
+    let requestSQL = "SELECT DISTINCT `id_r`,`id_user`,`rate` FROM rating_user";
+    conn.query(requestSQL, (err, result) => {
       if (err) {
         console.log(err);
       } else {
