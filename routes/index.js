@@ -4,20 +4,19 @@ var multer = require("multer");
 var upload = multer({ dest: "./upload/" });
 const mysql = require("mysql");
 
-/* const conn = mysql.createConnection({
+const conn = mysql.createConnection({
   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com",
   user: "ueedenphzx2yvgfe",
   database: "bblqpq3zqeki4vqkexwc",
   password: "Hea5c7Ksi0Ls7h3kyZzp",
 });
 
- */
-const conn = mysql.createConnection({
-/*   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com", */
+
+/* const conn = mysql.createConnection({
   user: "root",
   database: "bblqpq3zqeki4vqkexwc",
   password: "",
-});
+}); */
 
 router.get("/", (req, res) => {
   res.send("Hi world!");
@@ -76,7 +75,6 @@ router.post("/recommendation", upload.array(), (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(result);
       res.send(result);
     }
   });
@@ -120,20 +118,53 @@ router.get("/score", (req, res) => {
 });
 
 router.get("/score_user", (req, res) => {
-  let sql = "SELECT id_user, COUNT(id_user) AS userLikes FROM score_user GROUP BY id_user";
+  let sql = "SELECT DISTINCT id_user, id_r AS userLikes FROM score_user";
   conn.query(sql, (err, result) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(result);
+      function countIdUserOccurrences(data) {
+        const countObj = {};
+        data.forEach((row) => {
+          const id_r = row.id_r;
+          const id_user = row.id_user;
+          if (countObj.hasOwnProperty(id_user)) {
+            countObj[id_user]++;
+          } else {
+            countObj[id_user] = 1;
+          }
+        });
+        let resultArray = Object.keys(countObj).map((id_user) => ({
+          id_user: parseInt(id_user),
+          userLikes: countObj[id_user],
+        }));
+        (resultArray.length===0?resultArray=[{id_user:null,userLikes:null}]:resultArray)
+        return resultArray;
+      }
+      console.log((result))
+      console.log(countIdUserOccurrences(result))
+      res.send(countIdUserOccurrences(result));
     }
   });
 });
+router.get("/likeList",  (req, res) => {
+let requestSQL = "SELECT DISTINCT id_r,id_user FROM score_user";
+conn.query(requestSQL, (err, result) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(result);
+    res.send(result);
+  }
+});}),
 
 router.post("/like", upload.array(), (req, res) => {
   id_r=req.body.id_r;
   id_user=req.body.id_user;
   like=+req.body.like;
+  console.log('id_r',id_r)
+  console.log('id_user',id_user)
+  console.log('like',like)
   let sql;
   if(like===1){
     sql="INSERT INTO score_user (`id_r`,`id_user`) VALUES (?,?)"
@@ -143,7 +174,17 @@ router.post("/like", upload.array(), (req, res) => {
   conn.query(sql,[id_r,id_user], (err, result) => {
     if (err) {
       console.log(err);
-    } 
+    } else{
+    let requestSQL = "SELECT * FROM score_user WHERE `id_user`=?";
+    conn.query(requestSQL, [id_user], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });}
+
   });
 });
 
