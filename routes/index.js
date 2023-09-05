@@ -221,6 +221,17 @@ router.post("/rate", upload.array(), (req, res) => {
   });
 });
 
+router.get("/ratedb", (req, res) => {
+      let requestSQL = "SELECT DISTINCT `id_r`,`id_user`,`rate` FROM rating_user";
+    conn.query(requestSQL, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });})
+
 // Profile page
 router.post("/addRecommendation", upload.array(), (req, res) => {
   
