@@ -3,8 +3,8 @@ const app=express();
 const cors = require('cors')
 const port=process.env.PORT||3001
 const bodyParser=require('body-parser')
-
-/* //
+/* 
+//
 var multer = require("multer");
 var upload = multer({ dest: "./upload/" });
 const mysql=require('mysql')
@@ -15,8 +15,8 @@ const conn=mysql.createConnection({
     database:'bblqpq3zqeki4vqkexwc',
     password:'Hea5c7Ksi0Ls7h3kyZzp'
 })
-//
- */
+// */
+
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
 app.use((req, res, next) => {
@@ -28,13 +28,14 @@ app.use((req, res, next) => {
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
 
-/* 
-conn.connect(function(err) {
+
+
+/* conn.connect(function(err) {
   if (err) throw err;
-  conn.query("SELECT id_r, COUNT(id_r) FROM score_user GROUP BY id_r", function (err, result, fields) {
+  conn.query("SELECT * FROM comment", function (err, result, fields) {
     if (err) throw err;
     console.log(result);
   });
-}); */
-
+});
+ */
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})

@@ -105,7 +105,7 @@ router.post("/sort", upload.array(), (req, res) => {
     sql = "SELECT * FROM Recommendation ORDER BY score ASC";}      
   conn.query(sql,(err, result) => {if (err) {console.log(err);} else {res.send(result);}});
 });
-// Main page
+//_____________________Main page_______________________
 router.get("/score", (req, res) => {
   let sql = "SELECT id_r, COUNT(id_r) AS Amount FROM score_user GROUP BY id_r";
   conn.query(sql, (err, result) => {
@@ -116,9 +116,6 @@ router.get("/score", (req, res) => {
     }
   });
 });
-
-
-
 router.get("/score_user", (req, res) => {
   let sql = "SELECT DISTINCT id_user, id_r AS userLikes FROM score_user";
   conn.query(sql, (err, result) => {
@@ -159,7 +156,6 @@ conn.query(requestSQL, (err, result) => {
     res.send(result);
   }
 });}),
-
 router.post("/like", upload.array(), (req, res) => {
   id_r=req.body.id_r;
   id_user=req.body.id_user;
@@ -189,7 +185,6 @@ router.post("/like", upload.array(), (req, res) => {
 
   });
 });
-
 router.post("/rate", upload.array(), (req, res) => {
   id_r=req.body.id_r;
   id_user=req.body.id_user;
@@ -220,7 +215,6 @@ router.post("/rate", upload.array(), (req, res) => {
 
   });
 });
-
 router.get("/ratedb", (req, res) => {
       let requestSQL = "SELECT DISTINCT `id_r`,`id_user`,`rate` FROM rating_user";
     conn.query(requestSQL, (err, result) => {
@@ -231,10 +225,8 @@ router.get("/ratedb", (req, res) => {
         res.send(result);
       }
     });})
-
-// Profile page
+//_____________________Profile page_______________________
 router.post("/addRecommendation", upload.array(), (req, res) => {
-  
   const id_user = req.body.id_user;
   let image;
   if (req.body.image === undefined ? (image = null) : (image = req.body.image));
@@ -281,7 +273,6 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
     }
   );
 });
-
 router.post("/update", upload.array(), (req, res) => {
    const id_r = req.body.id_r;
   let image;
@@ -307,5 +298,40 @@ router.post("/update", upload.array(), (req, res) => {
     }
   });
 });
+//__________Comments__________
+router.get("/comment", (req, res) => {
+  let sql = "SELECT * FROM comment";
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+});
 
+router.post("/setComment",upload.array(), (req, res) => {
+  let id_r=req.body.id_r,
+      id_user=req.body.id_user,
+      comment=req.body.comment;
+      date_upload=req.body.date_upload;
+
+    console.log(comment)
+      sql="INSERT INTO comment (`id_r`,`id_user`,`comment`,`date_upload`) VALUES (?,?,?,?)"
+      
+      conn.query(sql,[id_r,id_user,comment,date_upload], (err, result) => {
+        if (err) {
+          console.log(err);
+        } else{
+
+  let sql = "SELECT * FROM comment";
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  })};
+})});
 module.exports = router;
