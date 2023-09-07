@@ -300,7 +300,7 @@ router.post("/update", upload.array(), (req, res) => {
 });
 //__________Comments__________
 router.get("/comment", (req, res) => {
-  let sql = "SELECT * FROM comment";
+  let sql = "SELECT name,id_user,id_r,date_upload,comment FROM comment JOIN Users ON comment.id_user=Users.id";
   conn.query(sql, (err, result) => {
     if (err) {
       console.log(err);
@@ -325,7 +325,7 @@ router.post("/setComment",upload.array(), (req, res) => {
           console.log(err);
         } else{
 
-  let sql = "SELECT * FROM comment";
+  let sql = "SELECT name,id_user,id_r,date_upload,comment FROM comment JOIN Users ON comment.id_user=Users.id";
   conn.query(sql, (err, result) => {
     if (err) {
       console.log(err);

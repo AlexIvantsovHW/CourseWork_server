@@ -3,8 +3,8 @@ const app=express();
 const cors = require('cors')
 const port=process.env.PORT||3001
 const bodyParser=require('body-parser')
-/* 
-//
+
+/* //
 var multer = require("multer");
 var upload = multer({ dest: "./upload/" });
 const mysql=require('mysql')
@@ -32,10 +32,11 @@ app.use(require('./routes'))
 
 /* conn.connect(function(err) {
   if (err) throw err;
-  conn.query("SELECT * FROM comment", function (err, result, fields) {
+  conn.query("SELECT name,id_user,id_r,date_upload,comment FROM comment JOIN Users ON comment.id_user=Users.id;", function (err, result, fields) {
     if (err) throw err;
     console.log(result);
   });
-});
- */
+}); */
+
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
+
