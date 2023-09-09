@@ -1,15 +1,22 @@
 const express = require("express");
 const router = express.Router();
-var multer = require("multer");
-var upload = multer({ dest: "./upload/" });
+const multer = require("multer");
+const upload = multer({ dest: "./upload/" });
 const mysql = require("mysql");
-
+const passport = require('passport');
 const conn = mysql.createConnection({
   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com",
   user: "ueedenphzx2yvgfe",
   database: "bblqpq3zqeki4vqkexwc",
   password: "Hea5c7Ksi0Ls7h3kyZzp",
 });
+const isLoggedIn = (req, res, next) => {
+  if (req.user) {
+      next();
+  } else {
+      res.sendStatus(401);
+  }
+}
 
 
 /* const conn = mysql.createConnection({
@@ -45,6 +52,7 @@ router.post("/registration", upload.array(), (req, res) => {
 
 router.post("/login", upload.array(), (req, res) => {
   const name = req.body.name;
+  console.log(name)
   const password = req.body.pass;
   let sql = "SELECT * FROM  Users WHERE `name`=?";
   conn.query(sql, [name], function (err, result) {
@@ -105,7 +113,7 @@ router.post("/sort", upload.array(), (req, res) => {
     sql = "SELECT * FROM Recommendation ORDER BY score ASC";}      
   conn.query(sql,(err, result) => {if (err) {console.log(err);} else {res.send(result);}});
 });
-//_____________________Main page_______________________
+//===========================Main Page===========================
 router.get("/score", (req, res) => {
   let sql = "SELECT id_r, COUNT(id_r) AS Amount FROM score_user GROUP BY id_r";
   conn.query(sql, (err, result) => {
@@ -225,7 +233,7 @@ router.get("/ratedb", (req, res) => {
         res.send(result);
       }
     });})
-//_____________________Profile page_______________________
+//===========================Profile Page===========================
 router.post("/addRecommendation", upload.array(), (req, res) => {
   const id_user = req.body.id_user;
   let image;
@@ -238,6 +246,8 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
   const tag = req.body.tag;
   const date_upload = req.body.date_upload;
   console.log(image)
+  console.log(title)
+  console.log(name)
   let sql =
     "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`Amount`,`id_comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
   conn.query(
@@ -266,7 +276,6 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
         if (err) {
           console.log(err);
         } else {
-          console.log(result);
           res.send(result);
         }
       });
@@ -298,7 +307,7 @@ router.post("/update", upload.array(), (req, res) => {
     }
   });
 });
-//__________Comments__________
+//===========================COMMENTS===============================
 router.get("/comment", (req, res) => {
   let sql = "SELECT name,id_user,id_r,date_upload,comment FROM comment JOIN Users ON comment.id_user=Users.id";
   conn.query(sql, (err, result) => {
@@ -310,7 +319,6 @@ router.get("/comment", (req, res) => {
     }
   });
 });
-
 router.post("/setComment",upload.array(), (req, res) => {
   let id_r=req.body.id_r,
       id_user=req.body.id_user,
@@ -334,4 +342,19 @@ router.post("/setComment",upload.array(), (req, res) => {
     }
   })};
 })});
+//===========================PASSPORT PAGE===========================
+router.get('/', (req, res) => res.send('Example Home page!'))
+router.get('/failed', (req, res) => res.send('You Failed to log in!'))
+router.get('/good', isLoggedIn, (req, res) => res.send(`Welcome mr ${req.user.displayName}!`))
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
+  function(req, res) {
+    res.redirect('/good');
+  }
+);
+router.get('/logout', (req, res) => {
+    req.session = null;
+    req.logout();
+    res.redirect('/');
+})
 module.exports = router;
