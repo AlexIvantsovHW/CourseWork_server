@@ -357,4 +357,27 @@ router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
 })
+
+//===========================ADMIN PAGE===========================
+router.post("/deleteUser", upload.array(), (req, res) => {
+  id=JSON.parse(req.body);
+  console.log(id)
+  let sql="DELETE FROM `Users` WHERE `id` IN ?"
+
+  conn.query(sql,[id], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else{
+    let requestSQL = "SELECT * FROM Users";
+    conn.query(requestSQL, [id], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send(result);
+      }
+    });}
+
+  });
+});
 module.exports = router;

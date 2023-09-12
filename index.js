@@ -24,13 +24,7 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 
-const isLoggedIn = (req, res, next) => {
-  if (req.user) {
-      next();
-  } else {
-      res.sendStatus(401);
-  }
-}
+
 app.use(passport.initialize());
 app.use(passport.session());
 
