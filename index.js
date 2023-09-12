@@ -1,13 +1,15 @@
 /* import {config} from 'dotenv'; */
-const express=require('express')
+const express=require('express');
 const app=express();
 const cors = require('cors')
 const port=process.env.PORT||3001
 const passport = require('passport');
 const bodyParser=require('body-parser')
+const authRoute=require("./routes/auth")
+const passportSetup=require('./passport')
 const cookieSession = require('cookie-session')
 require('dotenv').config()
-require('./passport-setup');
+require('./passport');
 
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
@@ -20,13 +22,15 @@ app.use((req, res, next) => {
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
 app.use(cookieSession({
-  name: 'tuto-session',
-  keys: ['key1', 'key2']
+  name: "session",
+  keys: ["cyberwolve"],
+  maxAge:24*60*60*100,
 }))
 
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/auth",authRoute);
 
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
 
