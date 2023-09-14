@@ -354,16 +354,15 @@ router.get('/logout', (req, res) => {
 
 //===========================ADMIN PAGE===========================
 router.post("/deleteUser", upload.array(), (req, res) => {
-  id=JSON.parse(req.body);
-  console.log(id)
-  let sql="DELETE FROM `Users` WHERE `id` IN ?"
+  const users=req.body.data.map((el)=>parseInt(el))
+  let sql="DELETE FROM Users WHERE `id` IN (?)"
 
-  conn.query(sql,[id], (err, result) => {
+  conn.query(sql,[users], (err, result) => {
     if (err) {
       console.log(err);
     } else{
     let requestSQL = "SELECT * FROM Users";
-    conn.query(requestSQL, [id], (err, result) => {
+    conn.query(requestSQL, (err, result) => {
       if (err) {
         console.log(err);
       } else {
