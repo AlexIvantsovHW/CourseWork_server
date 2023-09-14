@@ -4,6 +4,7 @@ const multer = require("multer");
 const upload = multer({ dest: "./upload/" });
 const mysql = require("mysql");
 const passport = require('passport');
+
 const conn = mysql.createConnection({
   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com",
   user: "ueedenphzx2yvgfe",
@@ -18,12 +19,6 @@ const isLoggedIn = (req, res, next) => {
   }
 }
 
-
-/* const conn = mysql.createConnection({
-  user: "root",
-  database: "bblqpq3zqeki4vqkexwc",
-  password: "",
-}); */
 
 router.get("/", (req, res) => {
   res.send("Hi world!");
@@ -98,7 +93,6 @@ router.get("/db", (req, res) => {
     }
   });
 });
-
 router.post("/sort", upload.array(), (req, res) => {
   const sort = req.body.sort;
   const field=req.body.field;
@@ -380,4 +374,24 @@ router.post("/deleteUser", upload.array(), (req, res) => {
 
   });
 });
+
+//PROFILE PAGE
+
+router.post("/deleteRecommend",upload.array(),  (req, res) => {
+  const reveivedData=req.body.data.map((el)=>parseInt(el))
+  console.log(reveivedData)
+  let sql;
+   sql="DELETE FROM Recommendation WHERE `id_r` IN (?)"
+   conn.query(sql,[reveivedData], (err, result) => {if(err){console.log(err);
+  }else{
+    conn.query("SELECT * FROM Recommendation", (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result)
+        res.send(result);
+      }
+    })
+  }}
+  )}); 
 module.exports = router;

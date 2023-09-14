@@ -6,6 +6,9 @@ const port=process.env.PORT||3001
 const passport = require('passport');
 const bodyParser=require('body-parser')
 const authRoute=require("./routes/auth")
+const multer = require("multer");
+const upload = multer({ dest: "./upload/" });
+/* const RecommenRoute=require("./routes/Recommend") */
 const passportSetup=require('./passport')
 const cookieSession = require('cookie-session')
 require('dotenv').config()
@@ -21,7 +24,7 @@ app.use((req, res, next) => {
   })
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
-app.use(cookieSession({
+/* app.use(cookieSession({
   name: "session",
   keys: ["cyberwolve"],
   maxAge:24*60*60*100,
@@ -29,8 +32,9 @@ app.use(cookieSession({
 
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); */
 app.use("/auth",authRoute);
+/* app.use("/recommend",RecommenRoute); */
 
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
 
