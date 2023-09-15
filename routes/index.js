@@ -102,9 +102,9 @@ router.post("/sort", upload.array(), (req, res) => {
   else if(sort==='ASC'&&field==='date_upload'){
      sql = "SELECT * FROM Recommendation ORDER BY date_upload ASC";}
   else if(sort==='DESC'&&field==='score'){
-    sql = "SELECT * FROM Recommendation ORDER BY score ASC";}
+    sql = "SELECT * FROM Recommendation JOIN rating_user ON Recommendation.id_r = rating_user.id_r ORDER BY rating_user.rate DESC";}
   else if(sort==='ASC'&&field==='score'){
-    sql = "SELECT * FROM Recommendation ORDER BY score ASC";}      
+    sql = "SELECT * FROM Recommendation JOIN rating_user ON Recommendation.id_r = rating_user.id_r ORDER BY rating_user.rate ASC";}      
   conn.query(sql,(err, result) => {if (err) {console.log(err);} else {res.send(result);}});
 });
 //===========================Main Page===========================
@@ -243,7 +243,7 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
   console.log(title)
   console.log(name)
   let sql =
-    "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`Amount`,`id_comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`Amount`,`comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
   conn.query(
     sql,
     [
