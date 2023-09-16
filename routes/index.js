@@ -34,15 +34,38 @@ router.get("/users", (req, res) => {
     }
   });
 });
+//=====================================REGISTRATION PAGE=============================
 router.post("/registration", upload.array(), (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.pass;
-  let qUpdate = "INSERT INTO `Users`(`name`,`email`,`password`) VALUES(?,?,?)";
-  conn.query(qUpdate, [name, email, password], (err) => {
-    console.log(err);
+  
+  const _name='%'+name+'%';
+  const _email='%'+email+'%';
+  const _password='%'+password+'%';
+  let sql="select * from `Users` where `name` like ? AND `email` like ? AND `password` like ?";
+  conn.query(sql,[_name, _email, _password],(err,result)=>{
+    if (err) {
+      console.log(err);
+    } else if(result.length!=0){
+      console.log('------------------------------');
+      res.send('dublicate');
+    } else{
+      let qUpdate = "INSERT INTO `Users`(`name`,`email`,`password`) VALUES(?,?,?)";
+      conn.query(qUpdate, [name, email, password], (err) => {
+        if(err){
+          console.log(err);
+          res.send(err);
+        }else{
+          console.log('200')
+          res.send('200');
+        }
+        
   });
-  console.log("done");
+    }
+  })
+ 
+    
 });
 
 router.post("/login", upload.array(), (req, res) => {
@@ -78,7 +101,7 @@ router.post("/recommendation", upload.array(), (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(result);
+      res.send(200);
     }
   });
 });
@@ -337,7 +360,7 @@ router.post("/setComment",upload.array(), (req, res) => {
   })};
 })});
 //===========================PASSPORT PAGE===========================
-router.get('/', (req, res) => res.send('Example Home page!'))
+/* router.get('/', (req, res) => res.send('Example Home page!'))
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 router.get('/good', isLoggedIn, (req, res) => res.send(`Welcome mr ${req.user.displayName}!`))
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -350,7 +373,7 @@ router.get('/logout', (req, res) => {
     req.session = null;
     req.logout();
     res.redirect('/');
-})
+}) */
 
 //===========================ADMIN PAGE===========================
 router.post("/deleteUser", upload.array(), (req, res) => {

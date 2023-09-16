@@ -3,16 +3,16 @@ const express=require('express');
 const app=express();
 const cors = require('cors')
 const port=process.env.PORT||3001
-const passport = require('passport');
+/* const passport = require('passport'); */
 const bodyParser=require('body-parser')
 const authRoute=require("./routes/auth")
 const multer = require("multer");
 const upload = multer({ dest: "./upload/" });
 /* const RecommenRoute=require("./routes/Recommend") */
-const passportSetup=require('./passport')
+/* const passportSetup=require('./passport') */
 const cookieSession = require('cookie-session')
 require('dotenv').config()
-require('./passport');
+/* require('./passport'); */
 
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
