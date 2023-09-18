@@ -101,7 +101,7 @@ router.post("/recommendation", upload.array(), (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(200);
+      res.send(result);
     }
   });
 });
