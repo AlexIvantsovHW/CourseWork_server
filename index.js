@@ -8,12 +8,18 @@ const bodyParser=require('body-parser')
 const authRoute=require("./routes/auth")
 const multer = require("multer");
 const upload = multer({ dest: "./upload/" });
+const cloudinary=require('cloudinary').v2
 /* const RecommenRoute=require("./routes/Recommend") */
 /* const passportSetup=require('./passport') */
 const cookieSession = require('cookie-session')
 require('dotenv').config()
 /* require('./passport'); */
 
+cloudinary.config({ 
+  cloud_name: 'dj4jyuhfj', 
+  api_key: '388474939987269', 
+  api_secret: '***************************' 
+});
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
 app.use((req, res, next) => {
@@ -24,13 +30,16 @@ app.use((req, res, next) => {
   })
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
+app.post('/upload',async(req,res,next)=>{
+  const {images}=req.body
+  res.send(images)
+  /* res.send('Ok') */
+})
 /* app.use(cookieSession({
   name: "session",
   keys: ["cyberwolve"],
   maxAge:24*60*60*100,
 }))
-
-
 app.use(passport.initialize());
 app.use(passport.session()); */
 app.use("/auth",authRoute);

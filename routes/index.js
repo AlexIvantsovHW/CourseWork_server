@@ -266,7 +266,7 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
   console.log(title)
   console.log(name)
   let sql =
-    "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`Amount`,`comment`,`date_upload`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO `Recommendation` (`id_r`,`id_user`,`image`,`title`,`name`,`group`,`category`,`text`,`tag`,`Amount`,`comment`,`date_upload`,`AuthorScore`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
   conn.query(
     sql,
     [
@@ -282,6 +282,7 @@ router.post("/addRecommendation", upload.array(), (req, res) => {
       0,
       0,
       date_upload,
+      0
     ],
     (err, result) => {
       if (err) {
@@ -359,6 +360,26 @@ router.post("/setComment",upload.array(), (req, res) => {
     }
   })};
 })});
+router.post("/setAuthorScore",upload.array(), (req, res) => {
+  let id_r=req.body.id_r,
+      id_user=req.body.id_user,
+      AuthorScore=req.body.AuthorScore;
+      sql="UPDATE Recommendation SET `AuthorScore`=? WHERE `id_r`=? AND`id_user`=?;"
+      
+      conn.query(sql,[AuthorScore,id_r,id_user], (err, result) => {
+        if (err) {
+          console.log(err);
+        } else{
+
+  let sql = "SELECT * FROM Recommendation";
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  })};
+})});
 //===========================PASSPORT PAGE===========================
 /* router.get('/', (req, res) => res.send('Example Home page!'))
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
@@ -416,4 +437,21 @@ router.post("/deleteRecommend",upload.array(),  (req, res) => {
     })
   }}
   )}); 
+
+ /* 
+router.post("/upload", (req, res) => {
+  try{
+
+  }catch(error){
+    console.log(error)
+  }
+
+}); 
+ */
+router.post('/upload',async(req,res,next)=>{
+  const {images}=req.body
+  res.send(images)
+  console.log(images)
+  /* res.send('Ok') */
+})
 module.exports = router;
