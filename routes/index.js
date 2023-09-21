@@ -4,6 +4,13 @@ const multer = require("multer");
 const upload = multer({ dest: "./upload/" });
 const mysql = require("mysql");
 const passport = require('passport');
+const cloudinary=require('cloudinary').v2
+
+cloudinary.config({ 
+  cloud_name: 'dj4jyuhfj', 
+  api_key: '388474939987269', 
+  api_secret: '7M6wy_ScXslriuAFZryRwBypHXc' 
+});
 
 const conn = mysql.createConnection({
   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com",
@@ -438,20 +445,29 @@ router.post("/deleteRecommend",upload.array(),  (req, res) => {
   }}
   )}); 
 
- /* 
-router.post("/upload", (req, res) => {
-  try{
-
-  }catch(error){
-    console.log(error)
-  }
-
-}); 
- */
-router.post('/upload',async(req,res,next)=>{
-  const {images}=req.body
-  res.send(images)
-  console.log(images)
-  /* res.send('Ok') */
+router.post('/upload',upload.array(),async (req,res,next)=>{
+ const images=req.body.images;
+ try{
+     const response= await cloudinary.uploader.upload(images[0]) 
+     res.send(response)
+ }catch(error){
+  next(error)
+ }
 })
+
+router.post('/setImg',upload.array(), (req,res,next)=>{
+  const image=req.body.image;
+  let sql='UPDATE Recommendation SET image = ? WHERE id_r = (SELECT max_id_r FROM (SELECT MAX(id_r) AS max_id_r FROM Recommendation) AS subquery);'
+  conn.query(sql,[image], (err, result) => {if(err){console.log(err);
+  }else{
+    conn.query("SELECT * FROM Recommendation", (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result)
+        res.send(result);
+      }
+    })
+  }}
+  )}); 
 module.exports = router;

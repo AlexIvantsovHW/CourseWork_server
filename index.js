@@ -18,7 +18,7 @@ require('dotenv').config()
 cloudinary.config({ 
   cloud_name: 'dj4jyuhfj', 
   api_key: '388474939987269', 
-  api_secret: '***************************' 
+  api_secret: '7M6wy_ScXslriuAFZryRwBypHXc' 
 });
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.json());
@@ -30,11 +30,7 @@ app.use((req, res, next) => {
   })
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
-app.post('/upload',async(req,res,next)=>{
-  const {images}=req.body
-  res.send(images)
-  /* res.send('Ok') */
-})
+
 /* app.use(cookieSession({
   name: "session",
   keys: ["cyberwolve"],
