@@ -11,13 +11,14 @@ cloudinary.config({
   api_key: '388474939987269', 
   api_secret: '7M6wy_ScXslriuAFZryRwBypHXc' 
 });
-
 const conn = mysql.createConnection({
   host: "bblqpq3zqeki4vqkexwc-mysql.services.clever-cloud.com",
   user: "ueedenphzx2yvgfe",
   database: "bblqpq3zqeki4vqkexwc",
   password: "Hea5c7Ksi0Ls7h3kyZzp",
 });
+
+//=====================================REQUESTS=============================
 const isLoggedIn = (req, res, next) => {
   if (req.user) {
       next();
@@ -25,12 +26,9 @@ const isLoggedIn = (req, res, next) => {
       res.sendStatus(401);
   }
 }
-
-
 router.get("/", (req, res) => {
   res.send("Hi world!");
 });
-
 router.get("/users", (req, res) => {
   let sql = "SELECT * FROM Users";
   conn.query(sql, (err, result) => {
@@ -46,7 +44,6 @@ router.post("/registration", upload.array(), (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.pass;
-  
   const _name='%'+name+'%';
   const _email='%'+email+'%';
   const _password='%'+password+'%';
@@ -70,11 +67,8 @@ router.post("/registration", upload.array(), (req, res) => {
         
   });
     }
-  })
- 
-    
+  })   
 });
-
 router.post("/login", upload.array(), (req, res) => {
   const name = req.body.name;
   console.log(name)
@@ -402,12 +396,10 @@ router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
 }) */
-
 //===========================ADMIN PAGE===========================
 router.post("/deleteUser", upload.array(), (req, res) => {
   const users=req.body.data.map((el)=>parseInt(el))
   let sql="DELETE FROM Users WHERE `id` IN (?)"
-
   conn.query(sql,[users], (err, result) => {
     if (err) {
       console.log(err);
@@ -424,9 +416,7 @@ router.post("/deleteUser", upload.array(), (req, res) => {
 
   });
 });
-
 //PROFILE PAGE
-
 router.post("/deleteRecommend",upload.array(),  (req, res) => {
   const reveivedData=req.body.data.map((el)=>parseInt(el))
   console.log(reveivedData)
@@ -444,7 +434,6 @@ router.post("/deleteRecommend",upload.array(),  (req, res) => {
     })
   }}
   )}); 
-
 router.post('/upload',upload.array(),async (req,res,next)=>{
  const images=req.body.images;
  try{
@@ -454,7 +443,6 @@ router.post('/upload',upload.array(),async (req,res,next)=>{
   next(error)
  }
 })
-
 router.post('/setImg',upload.array(), (req,res,next)=>{
   const image=req.body.image;
   let sql='UPDATE Recommendation SET image = ? WHERE id_r = (SELECT max_id_r FROM (SELECT MAX(id_r) AS max_id_r FROM Recommendation) AS subquery);'

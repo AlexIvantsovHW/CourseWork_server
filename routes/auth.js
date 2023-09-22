@@ -13,14 +13,12 @@ router.get("/login/success", (req, res) => {
         res.status(403).json({error:true,message:"Not Authorized"})
     }
   });
-
 router.get("/login/failed", (req, res) => {
   res.status(401).json({
     error: true,
     message: "Lok in failure",
   });
 });
-
 router.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -28,7 +26,6 @@ router.get(
     failureRedirect: "/login/failed",
   })
 );
-
 router.get("/logout",(req,res)=>{
     req.logout();
     res.redirect(process.env.CLIENT_URL)

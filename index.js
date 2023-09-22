@@ -10,7 +10,6 @@ const cloudinary=require('cloudinary').v2
 const cookieSession = require('cookie-session')
 require('dotenv').config()
 
-
 cloudinary.config({ 
   cloud_name: 'dj4jyuhfj', 
   api_key: '388474939987269', 
@@ -26,7 +25,6 @@ app.use((req, res, next) => {
   })
 app.use(cors({origin:"*"}));
 app.use(require('./routes'))
-
 app.use("/auth",authRoute);
 
 app.listen(port,()=>{console.log(`App is started, port: ${port}`)})
