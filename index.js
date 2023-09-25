@@ -22,7 +22,7 @@ cloudinary.config({
 passport.use("auth-github",new GitHubStrategy({
   clientID: 'e56ca00f281133c136bd',
   clientSecret: '7e9e35fba444b39a2e74899a41828935eee27d81',
-  callbackURL: 'http://localhost:3001/auth/github/callback'
+  callbackURL: 'https://coursework-server.onrender.com/auth/github/callback'
 }, (accessToken, refreshToken, profile, done) => {
 
   // В этой функции можно сохранить данные пользователя или выполнить другие действия после авторизации
@@ -73,7 +73,7 @@ app.get('/auth/github/callback', passport.authenticate("auth-github", {
     <body>
     </body>
     <script>
-      window.opener.postMessage(${user}, 'http://localhost:3000')
+      window.opener.postMessage(${user}, 'https://itransionuser.000webhostapp.com/')
     </script>
   </html>`);
 }
