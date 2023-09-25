@@ -95,6 +95,16 @@ router.post("/login", upload.array(), (req, res) => {
     }
   });
 });
+router.post("/checkGitUser", upload.array(), (req, res) => {
+  const name = req.body.name;
+  const password = req.body.id;
+  const email=req.body.email;
+  let sql = "SELECT EXISTS(SELECT * FROM  Users WHERE `name`=?) AS `user`";
+  conn.query(sql, [name], function (err, result) {
+    if (err) throw err;
+      const existUser=result[0].user;
+  res.send(result);});
+});
 router.post("/recommendation", upload.array(), (req, res) => {
   const id = req.body.id;
   let sql = "SELECT * FROM Recommendation WHERE `id_user`=?";
@@ -381,21 +391,7 @@ router.post("/setAuthorScore",upload.array(), (req, res) => {
     }
   })};
 })});
-//===========================PASSPORT PAGE===========================
-/* router.get('/', (req, res) => res.send('Example Home page!'))
-router.get('/failed', (req, res) => res.send('You Failed to log in!'))
-router.get('/good', isLoggedIn, (req, res) => res.send(`Welcome mr ${req.user.displayName}!`))
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
-  function(req, res) {
-    res.redirect('/good');
-  }
-);
-router.get('/logout', (req, res) => {
-    req.session = null;
-    req.logout();
-    res.redirect('/');
-}) */
+
 //===========================ADMIN PAGE===========================
 router.post("/deleteUser", upload.array(), (req, res) => {
   const users=req.body.data.map((el)=>parseInt(el))
@@ -458,4 +454,6 @@ router.post('/setImg',upload.array(), (req,res,next)=>{
     })
   }}
   )}); 
+
+   
 module.exports = router;
